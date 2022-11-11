@@ -5,7 +5,7 @@ const Sidebar = () => {
   return (
     <>
         
-            <div className="col-2 bg-dark vh-100 px-2 py-4">
+            <div className="bg-dark vh-100 px-2 py-4">
             
                 <div className="py-2">
                     {SidebarData.map((item, index) => {
