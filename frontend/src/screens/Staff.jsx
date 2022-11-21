@@ -5,8 +5,14 @@ import Sidebar from '../components/Sidebar'
 const Staff = () => {
   return (
     <>
-      <Header />
-      <Sidebar />
+      <div className="row">
+        <div>
+          <Header />
+        </div>
+        <div className="col-md-2">
+          <Sidebar />
+        </div>
+      </div>
     </>
   )
 }
