@@ -45,14 +45,14 @@ const Dashboard = () => {
         <Sidebar />
       </div>
       <div className="col-md-10 p-2">
-		<div className="row">
-			<ol className="breadcrumb">
-				<li><a href="#home">
-					<em className="fa fa-home"> </em>
-				</a></li>
-				<li className="active">/ Dashboard</li>
-			</ol>
-		</div>
+        <div className="row">
+          <ol className="breadcrumb">
+            <li><a href="#home">
+              <em className="fa fa-home"> </em>
+            </a></li>
+            <li className="active">/ Dashboard</li>
+          </ol>
+        </div>
 		
 		<div className="panel panel-container p-4">
 			<div className="row">

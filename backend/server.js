@@ -20,6 +20,37 @@ app.get("/api/get", (req,res)=>{
     });  
 });
 
+app.get("/api/getRooms", (req,res)=>{
+    var sql = `select * from room Natural join room_type where room_type_id=${req.query.room_type_id}`;
+    db.query(sql, (err,result)=>{
+        if(err) {
+        console.log(err)
+        } 
+    res.send(result)
+    });  
+});
+
+app.get("/api/reservation", (req,res)=>{
+
+    var sql = "Select * from room_type;"
+    db.query(sql, (err,result)=>{
+        if(err) {
+        console.log(err)
+        } 
+    res.send(result)
+    });  
+});
+
+app.get("/api/getIdCardsType", (req,res)=>{
+    var sql = "Select * from id_card_type;"
+    db.query(sql, (err,result)=>{
+        if(err) {
+         console.log(err)
+        } 
+    res.send(result)
+    });  
+});
+
 const PORT = 5000
 
 app.listen(PORT,()=>{

@@ -34,7 +34,7 @@ export const SidebarData = [
   {
     title: 'Statistics',
     path: '/statistics',
-    icon: <em class="fa fa-pie-chart">&nbsp;</em>,
+    icon: <em className="fa fa-pie-chart">&nbsp;</em>,
     cName: 'nav-text'
   }
 ];
