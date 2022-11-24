@@ -7,17 +7,25 @@ const Reservation = () => {
 
   const [checkInDate, setCheckInDate] = useState(new Date());
   const [checkOutDate, setCheckOutDate] = useState(new Date());
+  const [idCards, setIDCards] = useState([]);
 
   const [types, setTypes] = useState([]);
   const [roomsForType, setRoomsForType] = useState([])
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchRoom = async () => {
       const { data } = await axios.get('/api/reservation')
       data.push({ room_type: "Select Room Type" })
       setTypes(data);
       //console.log(data)
     }
-    fetchData();
+    fetchRoom();
+    const fetchID = async () => {
+      const { data } = await axios.get('/api/getIdCardsType')
+      //data.push({ room_type: "Select Room Type" })
+      setIDCards(data);
+      //console.log(data)
+    }
+    fetchID();
   }, [])
 
   var Difference_In_Time = new Date(checkOutDate).getTime() - new Date(checkInDate).getTime();
@@ -44,7 +52,7 @@ const Reservation = () => {
 
           <div className="row pe-4 ps-2 py-2">
             <div className="col-md-12">
-              <form id="booking" data-toggle="validator">
+              <form action="/api/reservation" method="POST" id="booking" data-toggle="validator">
                 <div className="response"></div>
                 <div className="col-md-12">
 
@@ -107,11 +115,11 @@ const Reservation = () => {
                       </div>
                     
                       <div className="col-lg-10 pt-3 pb-2">
-                        <h5 style={{ fontWeight: 'bold' }}>Total Days : <span id="staying_day">{Difference_In_Days}</span> Days</h5>
-                        {console.log(roomsForType)}
+                        <h5 style={{ fontWeight: 'bold' }}>Total Days : <span id="staying_day">{Difference_In_Days>=1 ? Difference_In_Days : 0}</span> Days</h5>
+                        {/* {console.log(roomsForType)} */}
 
-                        <h5 style={{ fontWeight: 'bold' }}>Price: <span id="price">{}</span>{roomsForType[0].price} /-</h5>
-                        <h5 style={{ fontWeight: 'bold' }}>Total Amount : <span id="total_price">0</span> /-</h5>
+                        <h5 style={{ fontWeight: 'bold' }}>Price: <span id="price">{}</span>{roomsForType[0] ? roomsForType[0].price : 0} /-</h5>
+                        <h5 style={{ fontWeight: 'bold' }}>Total Amount : <span id="total_price">{roomsForType[0] && Difference_In_Days>=1 ? roomsForType[0].price*Difference_In_Days : 0}</span> /-</h5>
                       </div>
                     </div>
                   </div>
@@ -147,8 +155,13 @@ const Reservation = () => {
                       <div className="form-group col-lg-6">
                         <label className="p-2">ID Card Type</label>
                         <select className="form-control" id="id_card_id" data-error="Select ID Card Type" required onChange="validId(this.value);">
+                          {idCards.map((item, index)=> {
+                            return <option selected key={index}>{item.id_card_type}</option>
+                          })}
+                          
+                          
                           <option selected disabled>Select ID Card Type</option>
-
+                          
                         </select>
                         <div className="help-block with-errors"></div>
                       </div>

@@ -51,6 +51,46 @@ app.get("/api/getIdCardsType", (req,res)=>{
     });  
 });
 
+app.get("/api/complaints", (req,res)=>{
+    var sql = "Select * from complaint;"
+    db.query(sql, (err,result)=>{
+        if(err) {
+         console.log(err)
+        } 
+    res.send(result)
+    });  
+});
+
+app.get("/api/manage_room", (req,res)=>{
+    var sql = "select * from room natural join room_type where deleteStatus = 0;"
+    db.query(sql, (err,result)=>{
+        if(err) {
+         console.log(err)
+        } 
+    res.send(result)
+    });  
+});
+
+app.get("/api/manage_staff", (req,res)=>{
+    var sql = "select * from staff natural join staff_type natural join shift order by emp_id;"
+    db.query(sql, (err,result)=>{
+        if(err) {
+         console.log(err)
+        } 
+    res.send(result)
+    });  
+});
+
+app.get("/api/shift", (req,res)=>{
+    var sql = "select * from shift;"
+    db.query(sql, (err,result)=>{
+        if(err) {
+         console.log(err)
+        } 
+    res.send(result)
+    });  
+});
+
 const PORT = 5000
 
 app.listen(PORT,()=>{

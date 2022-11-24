@@ -11,7 +11,7 @@ const Sidebar = () => {
                     {SidebarData.map((item, index) => {
               return (
                 
-                    <div className="text-white py-2 mdft">
+                    <div className="text-white py-2 mdft" key={index}>
                         <a href={item.path}>
                             <span className="text-white p-2">{item.icon}</span>
                             <span className="text-white p-2">{item.title}</span>
