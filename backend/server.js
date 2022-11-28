@@ -1,10 +1,13 @@
 import express from 'express';
 import db from './config/db.js';
+import bodyParser from 'body-parser';
+import methodOverride from 'method-override';
 
 const app = express();
 
 app.use(express.json());
-
+app.use(express.urlencoded({extended:true}));
+app.use(methodOverride('_method'));
 app.get('/',(req,res)=>{
     res.send('API is running...');
 })
@@ -21,7 +24,7 @@ app.get("/api/get", (req,res)=>{
 });
 
 app.get("/api/getRooms", (req,res)=>{
-    var sql = `select * from room Natural join room_type where room_type_id=${req.query.room_type_id}`;
+    var sql = `select * from room Natural join room_type where room_type_id=${req.query.room_type_id} and status is null`;
     db.query(sql, (err,result)=>{
         if(err) {
         console.log(err)
@@ -38,6 +41,49 @@ app.get("/api/reservation", (req,res)=>{
         console.log(err)
         } 
     res.send(result)
+    });  
+});
+
+app.post("/api/reservation", (req,res)=>{
+
+    var sql = `INSERT INTO customer (customer_name,contact_no,email,id_card_type_id,id_card_no,address) VALUES (concat('${req.body.first_name}'," ",'${req.body.last_name}'),${req.body.contact_no},'${req.body.mail}',${req.body.id_card},'${req.body.idcard_no}','${req.body.address}');`
+    db.query(sql, (err,result)=>{
+        if(err) {
+         console.log(err)
+        } 
+        console.log(result)
+        var sql = `INSERT INTO booking (customer_id,room_id,check_in,check_out,total_price,remaining_price,payment_status) VALUES (${result.insertId},${req.body.room_no},'${req.body.check_in_date}','${req.body.check_out_date}',${req.body.total_price},${req.body.total_price},0);`
+        db.query(sql, (err,result)=>{
+            if(err) {
+             console.log(err)
+            } 
+            console.log(res)
+            //res.send(result)
+        });
+        res.send(result)
+    });  
+});
+
+app.post("/api/complaint", (req,res)=>{
+
+    var sql = `INSERT INTO complaint (complainant_name,complaint_type,complaint,resolve_status,budget) VALUES ('${req.body.complainant_name}','${req.body.complaint_type}','${req.body.complaint}',0,NULL);`
+    db.query(sql, (err,result)=>{
+        if(err) {
+         console.log(err)
+        } 
+        res.send(result)
+    });  
+});
+
+app.post("/api/complaint/resolve", (req,res)=>{
+
+    console.log(req.body);
+    var sql = `UPDATE complaint set budget = ${req.body.resolve_budget},resolve_status = 1 WHERE id=${req.body.complaint_id};`
+    db.query(sql, (err,result)=>{
+        if(err) {
+         console.log(err)
+        } 
+        res.send(result)
     });  
 });
 
