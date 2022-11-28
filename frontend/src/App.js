@@ -13,12 +13,13 @@ function App() {
     <>
       <Router>
         <Routes>
+          <Route path='/' element={<Dashboard />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/reservation' element={<Reservation />} />
           <Route path='/room_management' element={<Room />} />
           <Route path='/staff_management' element={<Staff />} />
           <Route path='/complaint' element={<Complaint />} />
-          <Route path='/statistics' element={<Dashboard />} />
+          {/* <Route path='/statistics' element={<Dashboard />} /> */}
         </Routes>
       </Router>
     </>

@@ -1,20 +1,35 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header'
 import Sidebar from '../components/Sidebar'
 
 const Room = () => {
 
-    const [getDetails, setGetDetails] = useState([]);
+  const [getDetails, setGetDetails] = useState([]);
+  const [checkinInfo, setCheckinInfo] = useState([]);
+  const [customerDetail, setCustomerDetail] = useState([]);
+  const [checkInData, setCheckInData] = useState([]);
+  const [deleteId, setDeleteId] = useState([]);
 
-    useEffect(() => {
-        const fetchDetails = async () => {
-            const { data } = await axios.get('/api/manage_room')
-            setGetDetails(data);
-            console.log(data)
-        }
-        fetchDetails();
-    }, [])
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      const { data } = await axios.get('/api/manage_room')
+      setGetDetails(data);
+      //console.log(data)
+    }
+    fetchDetails();
+
+    const fetchcheckin = async () => {
+      const { data } = await axios.get('/api/checkin')
+      setCheckinInfo(data);
+      //console.log(data)
+    }
+    fetchcheckin();
+
+  }, [])
 
 
   return (
@@ -63,32 +78,59 @@ const Room = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {getDetails.map((item, index)=>{
+                      {getDetails.map((item, index) => {
                         return (<tr key={index}>
                           <td>{item.room_no}</td>
-                                    <td>{item.room_type}</td>
-                                    <td>
-                                        {item.status ? <a href="/prateek" className="btn btn-danger" style={{borderRadius:0}}>Booked</a> : <a href="/prateek" class="btn btn-success" style={{borderRadius:0}}>Book Room</a>}
-                                    </td>
+                          <td>{item.room_type}</td>
+                          <td>
+                            {item.status ? <a href="#booked" className="btn btn-danger" style={{ borderRadius: 0 }}>Booked</a> : <a href="/Reservation" class="btn btn-success" style={{ borderRadius: 0 }}>Book Room</a>}
+                          </td>
 
 
-                                    <td>
-                                        {item.status && !item.check_in_status ? <button class="btn btn-warning" id="checkInRoom" data-id={item.room_id} data-toggle="modal" style={{borderRadius:0}} data-target="#checkIn">Check In</button> : (!item.status ? "-" : <a href="/prateek" class="btn btn-danger" style={{borderRadius:0}}>Checked In</a>)}
-                                    </td>
-                                    <td>
-                                        {item.status && item.check_in_status ? <button class="btn btn-primary" style={{borderRadius:0}} id="checkOutRoom" data-id={item.room_id}>Check Out</button> : (!item.status && '-')}
-                                    </td>
-                                    <td>
+                          <td>
+                            {item.status && !item.check_in_status ? <button class="btn btn-warning" id="checkInRoom" data-id={item.room_id} data-toggle="modal" style={{ borderRadius: 0 }} onClick={() => {
+                              setCheckInData(checkinInfo.find((key) => key.room_id === item.room_id))
+                            }} data-target="#checkIn">Check In</button> : (!item.status ? "-" : <a href="#CheckedIn" class="btn btn-danger" style={{ borderRadius: 0 }}>Checked In</a>)}
+                          </td>
+                          <td>
+                            {item.status && item.check_in_status ? <button class="btn btn-primary" style={{ borderRadius: 0 }} id="checkOutRoom" data-id={item.room_id}>Check Out</button> : (!item.status && '-')}
+                          </td>
+                          <td>
 
-                                        <button title="Edit Room Information" style={{orderRadius:60}} data-toggle="modal"
+                            {/* <button title="Edit Room Information" style={{orderRadius:60}} data-toggle="modal"
                                                 data-target="#editRoom" data-id="<?php echo $rooms['room_id']; ?>"
-                                                id="roomEdit" className="btn btn-info"><i className="fa fa-pencil"></i></button>
-                                        {item.status && <button title="Customer Information" data-toggle="modal" data-target="#cutomerDetailsModal" data-id={item.room_id} id="cutomerDetails" class="btn btn-warning" style={{borderRadius:60}}><i class="fa fa-eye"></i></button>}
+                                                id="roomEdit" className="btn btn-info"><i className="fa fa-pencil"></i></button> */}
+                            {item.status && <button title="Customer Information" data-toggle="modal" data-target="#cutomerDetailsModal" data-id={item.room_id} id="cutomerDetails" className="btn btn-warning mx-1" style={{ borderRadius: 60 }}><i class="fa fa-eye" onClick={() => {
 
-                                        <a href="ajax.php?delete_room=<?php echo $rooms['room_id']; ?>"
-                                           className="btn btn-danger" style={{borderRadius:60}} onClick="return confirm('Are you Sure?')"><i
-                                                    className="fa fa-trash" alt="delete"></i></a>
-                                    </td>
+                              setCustomerDetail(checkinInfo.find((key) => key.room_id === item.room_id))
+                              console.log(customerDetail)
+                              
+                            }}></i></button>}
+
+                            <button 
+                              className="btn btn-danger" style={{ borderRadius: 60 }}><i
+                                className="fa fa-trash" alt="delete" onClick={() => {
+                                  setDeleteId(item.room_id)
+                                  var body = {
+                                    roomId : item.room_id
+                                  }
+                                  console.log("Hii there");
+                                  axios({
+                                    method: "post",
+                                    url: "/api/deleteRooms",
+                                    data: body
+                                  })
+                                    .then(function (response) {
+                                      console.log(response);
+                                    })
+                                    .catch(function (response) {
+                                      //handle error
+                                      console.log(response);
+                                    });
+                                  navigate('/room_management')
+                                  window.location.reload(); 
+                                }}></i></button>
+                          </td>
                         </tr>)
                       })}
                     </tbody>
@@ -188,31 +230,31 @@ const Room = () => {
                         <tbody>
                           <tr>
                             <td><b>Customer Name</b></td>
-                            <td id="customer_name"></td>
+                            <td id="customer_name">{customerDetail.customer_name}</td>
                           </tr>
                           <tr>
                             <td><b>Contact Number</b></td>
-                            <td id="customer_contact_no"></td>
+                            <td id="customer_contact_no">{customerDetail.contact_no}</td>
                           </tr>
                           <tr>
                             <td><b>Email</b></td>
-                            <td id="customer_email"></td>
+                            <td id="customer_email">{customerDetail.email}</td>
                           </tr>
                           <tr>
                             <td><b>ID Card Type</b></td>
-                            <td id="customer_id_card_type"></td>
+                            <td id="customer_id_card_type">{customerDetail.id_card_type}</td>
                           </tr>
                           <tr>
                             <td><b>ID Card Number</b></td>
-                            <td id="customer_id_card_number"></td>
+                            <td id="customer_id_card_number">{customerDetail.id_card_no}</td>
                           </tr>
                           <tr>
                             <td><b>Address</b></td>
-                            <td id="customer_address"></td>
+                            <td id="customer_address">{customerDetail.address}</td>
                           </tr>
                           <tr>
                             <td><b>Remaining Amount</b></td>
-                            <td id="remaining_price"></td>
+                            <td id="remaining_price">{customerDetail.remaining_price}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -238,27 +280,27 @@ const Room = () => {
                         <tbody>
                           <tr>
                             <td><b>Customer Name</b></td>
-                            <td id="getCustomerName"></td>
+                            <td id="getCustomerName">{checkInData.customer_name}</td>
                           </tr>
                           <tr>
                             <td><b>Room Type</b></td>
-                            <td id="getRoomType"></td>
+                            <td id="getRoomType">{checkInData.room_type}</td>
                           </tr>
                           <tr>
                             <td><b>Room Number</b></td>
-                            <td id="getRoomNo"></td>
+                            <td id="getRoomNo">{checkInData.room_no}</td>
                           </tr>
                           <tr>
                             <td><b>Check In</b></td>
-                            <td id="getCheckIn"></td>
+                            <td id="getCheckIn">{checkInData.check_in}</td>
                           </tr>
                           <tr>
                             <td><b>Check Out</b></td>
-                            <td id="getCheckOut"></td>
+                            <td id="getCheckOut">{checkInData.check_out}</td>
                           </tr>
                           <tr>
                             <td><b>Total Price</b></td>
-                            <td id="getTotalPrice"></td>
+                            <td id="getTotalPrice">{checkInData.total_price}</td>
                           </tr>
                         </tbody>
                       </table>

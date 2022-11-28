@@ -137,6 +137,29 @@ app.get("/api/shift", (req,res)=>{
     });  
 });
 
+app.get("/api/checkin", (req,res)=>{
+    var sql = "select * from room natural join customer natural join booking natural join room_type natural join id_card_type;"
+    db.query(sql, (err,result)=>{
+        if(err) {
+         console.log(err)
+        } 
+    res.send(result)
+    });  
+});
+
+app.post("/api/deleteRooms", (req,res)=>{
+
+    console.log(req.body);
+    var sql = `delete from room where room_id=${req.body.roomId};`
+    db.query(sql, (err,result)=>{
+        if(err) {
+         console.log(err)
+        } 
+        console.log(result)
+        res.send(result)
+    });  
+});
+
 const PORT = 5000
 
 app.listen(PORT,()=>{

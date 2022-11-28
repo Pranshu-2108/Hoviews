@@ -47,9 +47,9 @@ const Staff = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="panel panel-default">
-                <div className="panel-heading">Employee Details:
+                {/* <div className="panel-heading">Employee Details:
                   <a href="/prateek" className="btn btn-secondary pull-right" style={{ borderRadius: 0 }}>Add Employee</a>
-                </div>
+                </div> */}
                 <div className="panel-body">
                   <table className="table table-striped table-bordered table-responsive" cellspacing="0" width="100%"
                     id="rooms">
@@ -61,8 +61,8 @@ const Staff = () => {
                         <th>Shift</th>
                         <th>Joining Date</th>
                         <th>Salary</th>
-                        <th>Change Shift</th>
-                        <th>Action</th>
+                        {/* <th>Change Shift</th>
+                        <th>Action</th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -75,11 +75,11 @@ const Staff = () => {
                         <td>{`${item.shift} - ${item.shift_timing}`}</td>
                         <td>{item.joining_date}</td>
                         <td>{item.salary}</td>
-                        <td>
+                        {/* <td>
                           <button className="btn btn-warning" style={{ borderRadius: 0 }} data-toggle="modal" data-target="#changeShift"
                             data-id="<?php echo $staff['emp_id']; ?>" id="change_shift">Change Shift</button>
-                        </td>
-                        <td>
+                        </td> */}
+                        {/* <td>
 
                           <button data-toggle="modal"
                             data-target={`#empDetail${item.emp_id}`}
@@ -90,7 +90,7 @@ const Staff = () => {
                               className="fa fa-trash"></i></a>
                           <a href='/prateek'
                             className="btn btn-success" title="Employee Histery" style={{ borderRadius: 0 }}><i className="fa fa-eye"></i></a>
-                        </td>
+                        </td> */}
                       </tr>)
                       })}
                     </tbody>

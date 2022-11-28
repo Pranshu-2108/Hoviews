@@ -30,11 +30,11 @@ export const SidebarData = [
     path: '/complaint',
     icon: <em className="fa fa-comments">&nbsp;</em>,
     cName: 'nav-text'
-  },
-  {
-    title: 'Statistics',
-    path: '/statistics',
-    icon: <em className="fa fa-pie-chart">&nbsp;</em>,
-    cName: 'nav-text'
   }
+  // {
+  //   title: 'Statistics',
+  //   path: '/statistics',
+  //   icon: <em className="fa fa-pie-chart">&nbsp;</em>,
+  //   cName: 'nav-text'
+  // }
 ];
